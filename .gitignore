@@ -1,0 +1,8 @@
+__pycache__
+.idea
+.git
+venv
+.gitattributes
+config.cfg
+errorLog.txt
+example.db
