@@ -1,0 +1,4 @@
+discord.py[voice]==1.7.3
+youtube_dl==2021.6.6
+mutagen==1.45.1
+sqlalchemy==1.4.6
