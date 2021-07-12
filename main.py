@@ -23,7 +23,7 @@ if os.path.exists("config.cfg"):
     with open("config.cfg", "r") as cfgfile:
         botCfg = json.load(cfgfile)   
 else:
-    botCfg = {'botPrefix' : os.environ["botPrefix"], 'owner_id' : os.environ["ownerId"], 'botToken' : os.environ["botToken"]}
+    botCfg = {'botPrefix' : os.environ["botPrefix"], 'ownerId' : os.environ["ownerId"], 'botToken' : os.environ["botToken"]}
 
 client = Bot(command_prefix=botCfg["botPrefix"], owner_id=botCfg["ownerId"], case_insensitive=True)
 
