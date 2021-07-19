@@ -5,8 +5,8 @@ import datetime
 from variables import Variables
 from discord_slash import cog_ext, SlashContext
 
-from discord_slash.utils.manage_components import create_button, create_actionrow
-from discord_slash.model import ButtonStyle
+#from discord_slash.utils.manage_components import create_button, create_actionrow
+#from discord_slash.model import ButtonStyle
 
 class Indev(commands.Cog):
     """
@@ -60,13 +60,15 @@ class Indev(commands.Cog):
                         "required": "true"
                         }])
     '''
+    '''
     @commands.command()
     async def exampleSlash(self, ctx, arg1):
         buttons = [create_button(style=ButtonStyle.green, label="A green button"),
                    create_button(style=ButtonStyle.blue, label="A blue button")]
         action_row = create_actionrow(*buttons)
         await ctx.send(content="abc", components=[action_row])
-
+    '''
+    
 def setup(client):
     """
     Sets up whole module.

@@ -16,7 +16,7 @@ from Models.UserNameModel import UserNameModel
 from Models.UserNameBackupModel import UserNameBackupModel
 from Models.QueueModel import QueueModel
 
-from discord_slash import SlashCommand, SlashContext
+#from discord_slash import SlashCommand, SlashContext
 
 # in case it is a local copy
 if os.path.exists("config.cfg"):
