@@ -17,4 +17,19 @@ def dumplog(string):
     cprint("Error dumped into dumplog.txt")
     with open("errorLog.txt", mode="a", encoding="utf-8") as file:
         file.write(f"{string}")
+
+def rollFormat(argument: str):
+    '''
+        This is used to format roll string and check if it's correct.
+        :param argument: String to format.
+    '''
+    argument = argument.replace("k", "d")
+    # error handling
+    try:
+        argument = [int(x) for x in argument.split("d")]
+    except Exception:
+        raise discord.InvalidArgument
+    if argument[0] < 1:
+        raise discord.InvalidArgument
+    return argument
     

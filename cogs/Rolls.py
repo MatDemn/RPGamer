@@ -7,10 +7,11 @@ import datetime
 import json
 import os
 from variables import Variables
-from additional import dumplog
+import additional
 import re
 import DBManager
 from sqlalchemy.sql import select
+
 
 from Models.ServerSessionModel import ServerSessionModel
 from Models.UserNameModel import UserNameModel
@@ -28,7 +29,7 @@ class Rolls(commands.Cog):
                       aliases=["r"]
                       )
     @commands.cooldown(3, 10, commands.BucketType.user)
-    async def rollthedice(self, ctx: commands.context, com='1d100', gmMem: discord.Member = None):
+    async def rollthedice(self, ctx: commands.context, rangedice: additional.rollFormat = [1,100], gmMem: discord.Member = None):
         """
         Command used to roll the dice. By default it rolls 1d100.
         If player is in at least 1 session, rolls are saved.
@@ -36,23 +37,11 @@ class Rolls(commands.Cog):
         :param gmMem: If user provided, it sends roll as secret to this player
         instead of sending it to the chat.
         """
-        com = com.replace("k", "d")
-        rand = 0
-
-        # error handling
-        try:
-            rangedice = [int(x) for x in com.split("d")]
-        except Exception:
-            raise discord.InvalidArgument
-
-        if rangedice[0] < 1:
-            raise discord.InvalidArgument
 
         # if there is `r {i} then I roll 1d{i}
         if len(rangedice) == 1:
             rangedice.append(rangedice[0])
             rangedice[0] = 1
-
         if rangedice[1] == 100:
             lowerbound = 5
             higherbound = 96
@@ -66,7 +55,6 @@ class Rolls(commands.Cog):
         sum = 0
         # message to send
         msg = ""
-
         # trim number of dice rolls to 10 (may be changed later)
         if rangedice[0] > 10:
             rangedice[0] = 10
@@ -74,7 +62,7 @@ class Rolls(commands.Cog):
         if rangedice[1] > 1000:
             rangedice[1] = 1000
             await ctx.send("You can only roll 1000 sided dice. I trimmed it, so no worries!")
-
+        rand = 0
         # simulating dice rolls
         for i in range(rangedice[0]):
             # random number from 1 to argument-defined (both included)
@@ -83,7 +71,6 @@ class Rolls(commands.Cog):
             sum += rand
             # compose message to send at the end
             msg += str(rand) + " "
-
         # average value for rolls
         average = sum / rangedice[0]
 
