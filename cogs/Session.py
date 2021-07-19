@@ -387,7 +387,7 @@ class Session(commands.Cog):
                                    UserNameBackupModel.NickBackup)\
                             .join(ServerSessionModel)\
                             .join(UserNameBackupModel)\
-                            .filter(ServerSessionModel.SessionShort == sessionShort)\
+                            .filter(ServerSessionModel.SessionShort == sessionShort, ServerSessionModel.ID_Server == ctx.guild.id)\
                             .all()
         if not result:
             await ctx.send("No session with this name...")
