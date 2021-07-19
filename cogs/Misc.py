@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from variables import Variables
 from additional import dumplog
+import DBManager
 
 class Misc(commands.Cog):
     """
@@ -42,6 +43,10 @@ class Misc(commands.Cog):
         
         for i in range(loopLimit):
             await msg.add_reaction(Variables.emojiarray[i%7])
+
+    #async def automaticSessionPoolCheckAndSend(self, ctx: commands.context):
+    #    with DBManager.dbmanager.Session.begin() as session:
+    #        result = session.query()
 
 
 def setup(client):

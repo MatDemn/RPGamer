@@ -3,7 +3,10 @@ from discord.ext import commands
 import discord.utils
 import datetime
 from variables import Variables
+from discord_slash import cog_ext, SlashContext
 
+from discord_slash.utils.manage_components import create_button, create_actionrow
+from discord_slash.model import ButtonStyle
 
 class Indev(commands.Cog):
     """
@@ -17,7 +20,8 @@ class Indev(commands.Cog):
         """
         self.client = client
 
-    @commands.command()
+    @commands.command(hidden=True)
+    @commands.is_owner()
     async def helloworld(self, ctx: commands.context):
         """
         Prints "Hello, world!" on chat. That's it.
@@ -26,7 +30,8 @@ class Indev(commands.Cog):
         """
         await ctx.send("Hello, world!")
 
-    @commands.command()
+    @commands.command(hidden=True)
+    @commands.is_owner()
     async def embedprint(self, ctx: commands.context):
         """
         Example of embed sending.
@@ -42,6 +47,25 @@ class Indev(commands.Cog):
         embed.set_footer(text="Treść stopki")
         await ctx.send(embed=embed)
 
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def refMess(self, ctx: commands.context):
+        await ctx.reply(f"Message that invoked me", mention_author=True)
+
+    '''
+    @cog_ext.cog_slash(name="exampleSlash", description="this one?", guild_ids=[759383031332339734], options=[{
+                       "name": "arg1",
+                        "description": "additional info",
+                        "type": 3,
+                        "required": "true"
+                        }])
+    '''
+    @commands.command()
+    async def exampleSlash(self, ctx, arg1):
+        buttons = [create_button(style=ButtonStyle.green, label="A green button"),
+                   create_button(style=ButtonStyle.blue, label="A blue button")]
+        action_row = create_actionrow(*buttons)
+        await ctx.send(content="abc", components=[action_row])
 
 def setup(client):
     """

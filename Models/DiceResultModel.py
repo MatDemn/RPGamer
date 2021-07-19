@@ -13,11 +13,13 @@ class DiceResultModel(dbmanager.Base):
     ID_User = Column(Integer, ForeignKey('UserNameBackup.ID_User'))
     DiceLabel = Column(Integer)
     AvgResults = Column(Float)
+    #VarianceResults = Column(Float)
     NumberOfResults = Column(Integer)
 
     def __init__(self, DiceLabel, AvgResults, NumberOfResults):
         self.DiceLabel = DiceLabel
         self.AvgResults = AvgResults
+        #self.VarianceResults = VarianceResults
         self.NumberOfResults = NumberOfResults
 
     def __repr__(self):
