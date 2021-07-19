@@ -474,11 +474,13 @@ class Session(commands.Cog):
 
             delete_q = UserNameModel.__table__.delete() \
                 .where(UserNameModel.ID_UserName.in_(stmnt))
+            '''
             if session.execute(delete_q).rowcount == len(result[2]):
                 # then delete session as well
                 delete_q = ServerSessionModel.__table__.delete() \
                     .where(ServerSessionModel.ID_ServerSession == result[0])
                 session.execute(delete_q)
+            '''
         await ctx.send(f"I removed those users from session {sessionShort}")
 
     @commands.command()
