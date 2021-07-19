@@ -337,7 +337,7 @@ class Session(commands.Cog):
         with DBManager.dbmanager.Session.begin() as session:
             results = session.query(ServerSessionModel.SessionShort)\
                     .join(UserNameModel)\
-                    .filter(UserNameModel.ID_User == ctx.message.author.id)\
+                    .filter(ServerSessionModel.ID_Server == ctx.guild.id, UserNameModel.ID_User == ctx.message.author.id)\
                     .order_by(ServerSessionModel.SessionShort)\
                     .all()
 
@@ -360,7 +360,7 @@ class Session(commands.Cog):
         """
         with DBManager.dbmanager.Session.begin() as session:
             results = session.query(ServerSessionModel.SessionShort) \
-                .filter(ServerSessionModel.ID_GM == ctx.message.author.id) \
+                .filter(ServerSessionModel.ID_Server == ctx.guild.id, ServerSessionModel.ID_GM == ctx.message.author.id) \
                 .order_by(ServerSessionModel.SessionShort) \
                 .all()
 
