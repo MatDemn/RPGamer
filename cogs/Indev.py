@@ -3,7 +3,7 @@ from discord.ext import commands
 import discord.utils
 import datetime
 from variables import Variables
-from discord_slash import cog_ext, SlashContext
+#from discord_slash import cog_ext, SlashContext
 
 #from discord_slash.utils.manage_components import create_button, create_actionrow
 #from discord_slash.model import ButtonStyle
