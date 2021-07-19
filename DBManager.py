@@ -14,9 +14,9 @@ class DBManager:
             # this is very stupid, but isn't work otherwise
             if uri.startswith("postgres://"):
                 uri = uri.replace("postgres://", "postgresql://", 1)
-            self.engine = create_engine(uri, future=True, echo=True, connect_args={'timeout': 5})
+            self.engine = create_engine(uri, future=True, echo=True)
         else:
-            self.engine = create_engine('sqlite:///example.db', future=True, echo=True, connect_args={'timeout': 5})
+            self.engine = create_engine('sqlite:///example.db', future=True, echo=True)
         #self.engine = create_engine('sqlite://', future=True, echo=True)
         self.Session = sessionmaker(bind=self.engine, future=True)
 
