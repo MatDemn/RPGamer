@@ -33,7 +33,7 @@ class Destroyer(commands.Cog):
     #@cog_ext.cog_slash(name="markInactive", guild_ids=[759383031332339734])
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def markInactive(self, ctx: SlashContext, freshmanrole: discord.Role, howmuchdays : int = 7):
+    async def markInactive(self, ctx: commands.context, freshmanrole: discord.Role, howmuchdays : int = 7):
         """
         Marks inactive users.
         If user joined <howMuchDays> ago and still has <freshmanrole> (SSR),
@@ -70,7 +70,7 @@ class Destroyer(commands.Cog):
     #@cog_ext.cog_slash(name="unmarkInactive", guild_ids=[759383031332339734])
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def unmarkInactive(self, ctx: SlashContext):
+    async def unmarkInactive(self, ctx: commands.context):
         """
         Unmarks inactive users. Opposite of markInactive command. If user has BSR,
         then this command clears it. Mainly used to rollback role assignment.
@@ -101,7 +101,7 @@ class Destroyer(commands.Cog):
     #@cog_ext.cog_slash(name="kickInactive", description="blabla", options=)
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def kickInactive(self, ctx: SlashContext, freshManRole: discord.Role, msg: str = "Your time for verification has expired. :("):
+    async def kickInactive(self, ctx: commands.context, freshManRole: discord.Role, msg: str = "Your time for verification has expired. :("):
         """
         Command that kicks users with BSR if they have SSR.
         If user has BSR, but doesn't have SSR (verified after BSR assignment),

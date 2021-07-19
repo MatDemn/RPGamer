@@ -32,18 +32,18 @@ else:
 
 client = Bot(command_prefix=botCfg["botPrefix"], owner_id=botCfg["ownerId"], case_insensitive=True,
              intents=discord.Intents.default())
-slash = SlashCommand(client, sync_commands=True)
+#slash = SlashCommand(client, sync_commands=True)
 
 # build all models in database
 DBManager.dbmanager.Base.metadata.create_all(bind=DBManager.dbmanager.engine)
-'''
+
 for filename in os.listdir("./cogs"):
     if filename.endswith(".py"):
         client.load_extension(f"cogs.{filename[:-3]}")
-'''
+
 '''client.load_extension(f"cogs.BotSetup")
 client.load_extension(f"cogs.Session")'''
-client.load_extension(f"cogs.Indev")
+#client.load_extension(f"cogs.Indev")
 
 guild_ids=[759383031332339734]
 

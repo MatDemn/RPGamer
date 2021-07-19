@@ -9,7 +9,7 @@ class DBManager:
     """
     def __init__(self):
         self.Base = declarative_base()
-        if os.environ['DATABASE_URL']:
+        if 'DATABASE_URL' in os.environ:
             uri = os.environ['DATABASE_URL']
             # this is very stupid, but isn't work otherwise
             if uri.startswith("postgres://"):
