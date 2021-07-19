@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, BigInteger
 from sqlalchemy.orm import relationship
 from DBManager import dbmanager
 
@@ -11,7 +11,7 @@ class UserNameBackupModel(dbmanager.Base):
     __tablename__ = "UserNameBackup"
     
 
-    ID_User = Column(Integer, primary_key=True)
+    ID_User = Column(BigInteger, primary_key=True)
     NickBackup = Column(String)
     SoundBoardSwitch = Column(Boolean)
 

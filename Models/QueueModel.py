@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Enum
+from sqlalchemy import Column, Integer, String, Boolean, Enum, BigInteger
 from DBManager import dbmanager
 
 
@@ -11,7 +11,7 @@ class QueueModel(dbmanager.Base):
     
 
     ID_Queue = Column(Integer, primary_key=True)
-    ID_Server = Column(Integer)
+    ID_Server = Column(BigInteger)
     Entry = Column(String)
     FullName = Column(String)
 

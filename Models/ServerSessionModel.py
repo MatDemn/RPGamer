@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Enum
+from sqlalchemy import Column, Integer, String, Boolean, Enum, BigInteger
 from sqlalchemy.orm import relationship
 from DBManager import dbmanager
 from .LanguageEnum import LanguageEnum
@@ -16,9 +16,9 @@ class ServerSessionModel(dbmanager.Base):
     
 
     ID_ServerSession = Column(Integer, primary_key=True, autoincrement=True)
-    ID_Server = Column(Integer)
+    ID_Server = Column(BigInteger)
     SessionShort = Column(String)
-    ID_GM = Column(Integer)
+    ID_GM = Column(BigInteger)
     SoundBoardSwitch = Column(Boolean)
 
     UsersNames = relationship("UserNameModel", cascade="all, delete, delete-orphan")

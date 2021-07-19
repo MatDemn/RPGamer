@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Float
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Float, BigInteger
 from DBManager import dbmanager
 
 class DiceResultModel(dbmanager.Base):
@@ -10,7 +10,7 @@ class DiceResultModel(dbmanager.Base):
     
 
     ID_DiceResults = Column(Integer, primary_key=True)
-    ID_User = Column(Integer, ForeignKey('UserNameBackup.ID_User'))
+    ID_User = Column(BigInteger, ForeignKey('UserNameBackup.ID_User'))
     DiceLabel = Column(Integer)
     AvgResults = Column(Float)
     #VarianceResults = Column(Float)

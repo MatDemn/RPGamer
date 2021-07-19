@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, BigInteger
 from DBManager import dbmanager
 
 
@@ -11,9 +11,9 @@ class UserNameModel(dbmanager.Base):
     
 
     ID_UserName = Column(Integer, primary_key=True)
-    ID_ServerSession = Column(Integer, ForeignKey('ServerSession.ID_ServerSession'))
+    ID_ServerSession = Column(BigInteger, ForeignKey('ServerSession.ID_ServerSession'))
     HeroName = Column(String)
-    ID_User = Column(Integer, ForeignKey('UserNameBackup.ID_User'))
+    ID_User = Column(BigInteger, ForeignKey('UserNameBackup.ID_User'))
 
     def __init__(self, HeroName):
         self.HeroName = HeroName
