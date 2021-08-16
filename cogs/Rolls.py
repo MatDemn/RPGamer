@@ -136,7 +136,7 @@ class Rolls(commands.Cog):
                 await ctx.send(f"{sum} [{msg[0:-1]}] {ctx.message.author.mention}")
 
     @commands.command(aliases=["sr"])
-    @commands.has_permissions(administrator=True)
+    @commands.has_role(Variables.rpgamerRole)
     async def sumrolls(self, ctx: commands.context, sessionShort: str):
         """
         Sums up rolls for all players in particular session.

@@ -41,8 +41,8 @@ class BotSetup(commands.Cog):
             await ctx.send("Please pass all the required arguments...")
         if isinstance(error, commands.errors.CommandOnCooldown):
             await ctx.send(f"You are on cooldown, {int(error.retry_after)}seconds left.")
-        elif isinstance(error, commands.CommandNotFound):
             #await ctx.send("I don't know this command, sorry. :(")
+        elif isinstance(error, commands.CommandNotFound):
             pass
         elif isinstance(error, commands.MissingPermissions):
             await ctx.send("You can't do that, pal. Ask for some higher permissions.")
@@ -54,7 +54,7 @@ class BotSetup(commands.Cog):
             await ctx.send(error.original)
         elif isinstance(error, commands.errors.BadArgument):
             await ctx.send(f"There is a problem with one or more of your arguments...")
-        elif isinstance(error, discord.ext.commands.errors.MissingAnyRole):
+        elif isinstance(error, commands.errors.MissingAnyRole):
             await ctx.send(f"You don't have required role: {error.missing_roles[0]}")
         elif isinstance(error, youtube_dl.utils.DownloadError):
             await ctx.send(f"Player error. Might be technical problems on the line.")
