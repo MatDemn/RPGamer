@@ -349,6 +349,30 @@ class Session(commands.Cog):
             for (sessionShort,) in results:
                     sendMess += f"{sessionShort}, "
             await ctx.send(sendMess[:-2])
+            
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    @commands.cooldown(3, 30, commands.BucketType.user)
+    async def sessionlistadmin(self, ctx: commands.context):
+        """
+        Shows all names of sessions on the server.
+        Just a simple list, nothing else.
+        :param ctx: Filled automatically during command invoke. Context of the command.
+        """
+        with DBManager.dbmanager.Session.begin() as session:
+            results = session.query(ServerSessionModel.SessionShort)\
+                    .filter(ServerSessionModel.ID_Server == ctx.guild.id)\
+                    .order_by(ServerSessionModel.SessionShort)\
+                    .all()
+
+        sendMess = "There are server sessions, sire...\n"
+        if not results:
+            sendMess = "No sessions found... \n"
+            await ctx.send(sendMess)
+        else:
+            for (sessionShort,) in results:
+                    sendMess += f"{sessionShort}, "
+            await ctx.send(sendMess[:-2])
 
     @commands.command()
     @commands.cooldown(3, 30, commands.BucketType.user)

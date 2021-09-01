@@ -11,6 +11,8 @@ class Variables(object):
 
     noneEmoji = "❌"
 
+    notsureEmoji = "🍏"
+
     sessionLimit = 7
     sessionMembers = 10
 

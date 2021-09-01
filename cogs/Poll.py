@@ -65,12 +65,14 @@ class Poll(commands.Cog):
             sendstring += Variables.emojiarray[i % 7] + str(" " + tempday.strftime("%A")) + str(
                 " (" + tempday.strftime("%d") + "." + tempday.strftime("%m") + ")") + "\n"
 
+        sendstring += Variables.notsureEmoji + str(" Not sure yet") + "\n"
         sendstring += Variables.noneEmoji + str(" None of the above") + "\n"
 
         msg = await context.send(sendstring)
 
         for i in range(0, iterate):
             await msg.add_reaction(Variables.emojiarray[i % 7])
+        await msg.add_reaction(Variables.notsureEmoji)
         await msg.add_reaction(Variables.noneEmoji)
 
     @commands.command()
@@ -89,7 +91,7 @@ class Poll(commands.Cog):
         tempMess = await ctx.send("**Calculating...**", delete_after=5.0)
 
         # extract all poll options into the array from message content
-        savedSonda = re.split(r'[\n\r]+', message.content)[1:-1]
+        savedSonda = re.split(r'[\n\r]+', message.content)[1:-2]
 
         # make ignored set (ignore this people in results)
         ignoredSet = set()
@@ -142,8 +144,11 @@ class Poll(commands.Cog):
 
                 if not goodDate:
                     msg += f"\n\t\t:x: Bad date. Votes: {len(reacUsers)}/{len(playersList)}"
-
-        await ctx.send(msg)
+        notSureSet = sorted(set([x.id for x in await message.reactions[-2].users().flatten()]).intersection(playersList))
+        msg += f"\n{Variables.notsureEmoji}**Not sure:** "
+        for i in notSureSet:
+            msg += f"<@!{i}>, "
+        await ctx.send(msg[:-2])
 
     @commands.command()
     @commands.has_permissions(administrator=True)
