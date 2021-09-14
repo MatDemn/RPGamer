@@ -153,7 +153,7 @@ class Poll(commands.Cog):
         if notSureSet:
             await ctx.send(msg[:-2])
             return
-        await ctx.xend(msg)
+        await ctx.send(msg)
 
     @commands.command()
     @commands.has_any_role(Variables.rpgamerRole)
