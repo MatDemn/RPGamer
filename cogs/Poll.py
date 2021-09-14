@@ -45,7 +45,8 @@ class Poll(commands.Cog):
         self.client = client
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_any_role(Variables.rpgamerRole)
+    @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessionpoll(self, context: commands.context, startday: str):
         """
         This command makes poll for players to vote.
@@ -76,7 +77,8 @@ class Poll(commands.Cog):
         await msg.add_reaction(Variables.noneEmoji)
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_any_role(Variables.rpgamerRole)
+    @commands.cooldown(3, 30, commands.BucketType.user)
     async def sumpoll(self, ctx: commands.context, message: discord.Message, *ignored: discord.Member):
         """
         This command is used to sum up previously
@@ -148,10 +150,14 @@ class Poll(commands.Cog):
         msg += f"\n{Variables.notsureEmoji}**Not sure:** "
         for i in notSureSet:
             msg += f"<@!{i}>, "
-        await ctx.send(msg[:-2])
+        if notSureSet:
+            await ctx.send(msg[:-2])
+            return
+        await ctx.xend(msg)
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_any_role(Variables.rpgamerRole)
+    @commands.cooldown(3, 30, commands.BucketType.user)
     async def mentionLazies(self, ctx: commands.context, message: discord.Message):
         """
         Not every player will vote straight away. Sometimes you have to remind,
