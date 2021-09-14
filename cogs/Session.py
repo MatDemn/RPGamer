@@ -49,7 +49,7 @@ class Session(commands.Cog):
         self.client = client
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessionuphero(self, ctx: commands.context, sessionShort: str):
         """
@@ -76,7 +76,7 @@ class Session(commands.Cog):
             session.bulk_update_mappings(UserNameModel, members)
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessionupbackup(self, ctx: commands.context, sessionShort : str):
         """
@@ -104,7 +104,7 @@ class Session(commands.Cog):
     @commands.command(name="sessionnicks",
                       desc="",
                       brief="Changes nicks of particular users for their respective names in particular session")
-    @commands.has_permissions(administrator=True)
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessionnicks(self, ctx: commands.context, sessionShort: str, clear: bool = 0):
         """
@@ -118,6 +118,7 @@ class Session(commands.Cog):
         :param clear: Nicks should be cleared or changed to session names?
         :return:
         """
+        errorLogs = ""
         with DBManager.dbmanager.Session.begin() as session:
             results = session.query(UserNameModel.ID_User, UserNameModel.HeroName,
                                     UserNameBackupModel.NickBackup,
@@ -147,11 +148,18 @@ class Session(commands.Cog):
                 await ctx.send("I cleared nicks...")
             else:
                 for (IDUser, HeroName, NickBack, SoundBoard) in results:
-                    await (await ctx.guild.fetch_member(int(IDUser))).edit(nick=HeroName)
-                    session.query(UserNameBackupModel) \
-                        .filter(UserNameBackupModel.ID_User == IDUser) \
-                        .update({UserNameBackupModel.SoundBoardSwitch: SoundBoard})
+                    try:
+                        await (await ctx.guild.fetch_member(int(IDUser))).edit(nick=HeroName)
+                    except Exception:
+                        errorLogs += f"{IDUser} ({HeroName}), "
+                        session.query(UserNameBackupModel) \
+                            .filter(UserNameBackupModel.ID_User == IDUser) \
+                            .update({UserNameBackupModel.SoundBoardSwitch: SoundBoard})
+                if errorLogs:
+                    await ctx.send(f"I changed nicks to {sessionShort} Errors: {errorLogs[:-2]}")
+                    return
                 await ctx.send(f"I changed nicks to {sessionShort}")
+                return
 
 
     async def sessionmakesilent(self, ctx: commands.context, sessionShort: str, soundBoard: bool,
@@ -219,6 +227,7 @@ class Session(commands.Cog):
                 session.delete(user)
 
     @commands.command()
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessionmake(self, ctx: commands.context, sessionShort : str, soundBoard : bool, *sessionMembers: discord.Member):
         """
@@ -293,6 +302,7 @@ class Session(commands.Cog):
                 await ctx.send(finalString)
 
     @commands.command()
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessiondel(self, ctx: commands.context, sessionShort: str):
         """
@@ -327,6 +337,7 @@ class Session(commands.Cog):
                 raise BotExceptions.GMOrAdmin
 
     @commands.command()
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessionlist(self, ctx: commands.context):
         """
@@ -375,6 +386,7 @@ class Session(commands.Cog):
             await ctx.send(sendMess[:-2])
 
     @commands.command()
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessionlistgm(self, ctx: commands.context):
         """
@@ -398,6 +410,7 @@ class Session(commands.Cog):
             await ctx.send(sendMess[:-2])
 
     @commands.command(aliases=['sessiondetails'])
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessiondetail(self, ctx: commands.context, sessionShort: str):
         """
@@ -422,6 +435,7 @@ class Session(commands.Cog):
         await ctx.send(sendMess)
 
     @commands.command()
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessionaddmem(self, ctx: commands.context, sessionShort: str, *members: discord.Member):
         """
@@ -466,6 +480,7 @@ class Session(commands.Cog):
         await ctx.send(f"I added those users to session {sessionShort}")
 
     @commands.command()
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessiondelmem(self, ctx: commands.context, sessionShort: str, *members: discord.Member):
         """
@@ -508,6 +523,7 @@ class Session(commands.Cog):
         await ctx.send(f"I removed those users from session {sessionShort}")
 
     @commands.command()
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessionmute(self, ctx: commands.context, sessionshort: str):
         """
@@ -542,6 +558,7 @@ class Session(commands.Cog):
         await ctx.send("Mics and headphones switched to opposite.")
 
     @commands.command()
+    @commands.has_any_role(Variables.rpgamerRole)
     @commands.cooldown(3, 30, commands.BucketType.user)
     async def sessionmove(self, ctx: commands.context, sessionshort: str, channel: discord.VoiceChannel):
         """
@@ -577,7 +594,7 @@ class Session(commands.Cog):
         await ctx.send(f"Session moved to channel **{channel.name}**.")
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_any_role(Variables.rpgamerRole)
     async def sessionSplit(self, context, sessionNr, nameOfSession):
         """
         This command is used to send separator between sessions.
