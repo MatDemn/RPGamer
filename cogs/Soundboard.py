@@ -345,9 +345,13 @@ class Soundboard(commands.Cog):
                 # if it's not occupied, play along :)
                 if not ctx.voice_client.is_playing() and not ctx.voice_client.is_paused():
                     try:
+                        print(result['formats'][0]['url'])
+                        print("---")
+                        ctx.voice_client.play(MusicSource(result['formats'][0]['url'], result,**Variables.FFMPEG_OPTIONS),
+                                after=lambda e: self.check_queue(ctx))
                         #ctx.voice_client.play(MusicSource(re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1), result,**Variables.FFMPEG_OPTIONS),
                         #        after=lambda e: self.check_queue(ctx))
-                        ctx.voice_client.play('http://www.blankwebsite.com/', after=lambda e: self.check_queue(ctx))
+                        #ctx.voice_client.play('http://www.blankwebsite.com/', after=lambda e: self.check_queue(ctx))
                     except:
                         await ctx.send("There is a problem with audio player...")
 
