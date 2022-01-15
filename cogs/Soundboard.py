@@ -339,16 +339,17 @@ class Soundboard(commands.Cog):
                     return
                 qm = QueueModel(ctx.guild.id, result['id'], result['title'][:50])
                 session.add(qm)
+                session.commit()
 
                 await ctx.send(f"{result['title'][:50]} added to queue...")
                 # if it's not occupied, play along :)
-                print("xoxo")
-                myRes = re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1)
-                print(f"{myRes}")
-                ctx.voice_client.play(MusicSource(re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1), result,**Variables.FFMPEG_OPTIONS))
                 if not ctx.voice_client.is_playing() and not ctx.voice_client.is_paused():
-                    ctx.voice_client.play(MusicSource(re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1), result,**Variables.FFMPEG_OPTIONS),
-                               after=lambda e: self.check_queue(ctx))
+                    try:
+                        #ctx.voice_client.play(MusicSource(re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1), result,**Variables.FFMPEG_OPTIONS),
+                        #        after=lambda e: self.check_queue(ctx))
+                        ctx.voice_client.play('http://www.blankwebsite.com/', after=lambda e: self.check_queue(ctx))
+                    except:
+                        await ctx.send("There is a problem with audio player...")
 
     @commands.command()
     @commands.has_any_role(f"{Variables.djRole}")

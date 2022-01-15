@@ -6,3 +6,4 @@ venv
 config.cfg
 errorLog.txt
 example.db
+repo_test.bat
