@@ -16,7 +16,7 @@ class DBManager:
                 uri = uri.replace("postgres://", "postgresql://", 1)
             self.engine = create_engine(uri, future=True, echo=True)
         else:
-            self.engine = create_engine('postgresql://zpvmpfsbnnipvw:6c42b97497f5c5ccd987badd132a9494b0779cc4534de48367445b4cda2d06a5@ec2-54-217-195-234.eu-west-1.compute.amazonaws.com:5432/datbrjup463jao', future=True, echo=True)
+            self.engine = create_engine('postgresql://viuaugsugdvrpv:073c54d58241d4959b7764fea64fb39a28a1a99e1b109bb5c043d3eca14f5e00@ec2-34-246-24-110.eu-west-1.compute.amazonaws.com:5432/d7joef1t7h2s8v', future=True, echo=True)
         #self.engine = create_engine('sqlite://', future=True, echo=True)
         self.Session = sessionmaker(bind=self.engine, future=True)
 
