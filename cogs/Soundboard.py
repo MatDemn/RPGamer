@@ -4,6 +4,7 @@ from discord.utils import get
 import asyncio
 import datetime
 import os
+import re
 import youtube_dl
 from sqlalchemy import func, select
 
@@ -340,12 +341,9 @@ class Soundboard(commands.Cog):
                 session.add(qm)
 
                 await ctx.send(f"{result['title'][:50]} added to queue...")
-                print("xoxo")
-                print(result)
                 # if it's not occupied, play along :)
                 if not ctx.voice_client.is_playing() and not ctx.voice_client.is_paused():
-                    ctx.voice_client.play(MusicSource(result['formats'][0]['url'], result,
-                                                      **Variables.FFMPEG_OPTIONS),
+                    ctx.voice_client.play(MusicSource(re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1), result,**Variables.FFMPEG_OPTIONS),
                                after=lambda e: self.check_queue(ctx))
 
     @commands.command()
