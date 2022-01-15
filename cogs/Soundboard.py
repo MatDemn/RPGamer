@@ -340,7 +340,8 @@ class Soundboard(commands.Cog):
                 session.add(qm)
 
                 await ctx.send(f"{result['title'][:50]} added to queue...")
-
+                print("xoxo")
+                print(result)
                 # if it's not occupied, play along :)
                 if not ctx.voice_client.is_playing() and not ctx.voice_client.is_paused():
                     ctx.voice_client.play(MusicSource(result['formats'][0]['url'], result,
