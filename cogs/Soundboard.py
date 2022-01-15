@@ -343,7 +343,8 @@ class Soundboard(commands.Cog):
                 await ctx.send(f"{result['title'][:50]} added to queue...")
                 # if it's not occupied, play along :)
                 print("xoxo")
-                print(f"{re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1)}")
+                myRes = re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1)
+                print(f"{myRes}")
                 ctx.voice_client.play(MusicSource(re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1), result,**Variables.FFMPEG_OPTIONS))
                 if not ctx.voice_client.is_playing() and not ctx.voice_client.is_paused():
                     ctx.voice_client.play(MusicSource(re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1), result,**Variables.FFMPEG_OPTIONS),
