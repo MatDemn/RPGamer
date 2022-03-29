@@ -23,7 +23,7 @@ class MusicSource(discord.FFmpegPCMAudio):
     it has some information about music.
     Music player can easily fetch title and other stuff from it.
     """
-    def __init__(self, source, data,  **before_options):
+    def __init__(self, source, data, is_loop, lastTimestamp: int = 0, **before_options):
         """
         Contructor that initiates all fields for object.
         Used by music player.
@@ -36,8 +36,14 @@ class MusicSource(discord.FFmpegPCMAudio):
         self.title = data.get('title')
         self.duration = data.get('duration')
         self.id = data.get('id')
-        self.lastTimestamp = 0
+        self.lastTimestamp = lastTimestamp
         self.lastTimeStopped = datetime.datetime.now()
+        self.stream_path = data.get('formats')[0]['url']
+        self.is_loop = False
+
+    @classmethod
+    def fromMusicSource(cls, ms, lastTimestamp, **before_options):
+        return cls(ms.id, {'title': ms.title, 'duration': ms.duration, 'id': ms.id, 'formats': [{'url' : ms.stream_path}]}, ms.is_loop, lastTimestamp, **before_options)
 
 
 class Soundboard(commands.Cog):
@@ -135,7 +141,7 @@ class Soundboard(commands.Cog):
                     .filter(QueueModel.ID_Server == ctx.message.guild.id).first()
                 # if it exists, play it along :)
                 if result:
-                    await self.silentplay(ctx, result[0])
+                    await self.silentplay(ctx, result[0], False)
                 else:
                     await ctx.send("No music on pause...")
 
@@ -160,12 +166,12 @@ class Soundboard(commands.Cog):
         srcInfo = {'title': f"{name}", 'id': "localFile", 'duration': audiolen}
         if ctx.voice_client and (ctx.voice_client.is_paused() or ctx.voice_client.is_playing()):
             vsource = ctx.voice_client.source
-            ctx.voice_client.source = MusicSource(filepath, srcInfo, **Variables.FFMPEG_OPTIONS)
+            ctx.voice_client.source = MusicSource(filepath, srcInfo, False, 0, **Variables.FFMPEG_OPTIONS)
             await asyncio.sleep(audiolen)
             ctx.voice_client.source = vsource
         else:
             srcInfo = {'title': f"{name}", 'id': "localFile", 'duration': audiolen}
-            ctx.voice_client.play(MusicSource(f"Sounds/{name}.mp3", srcInfo, **Variables.FFMPEG_OPTIONS), after=lambda e: self.check_queue(ctx))
+            ctx.voice_client.play(MusicSource(f"Sounds/{name}.mp3", srcInfo, False, 0, **Variables.FFMPEG_OPTIONS), after=lambda e: self.check_queue(ctx))
 
     @commands.command(name="queue")
     @commands.has_any_role(f"{Variables.djRole}")
@@ -205,7 +211,7 @@ class Soundboard(commands.Cog):
 
         async with ctx.typing():
             ytdl = youtube_dl.YoutubeDL(ytdl_opts)
-            result = await self.client.loop.run_in_executor(None, lambda: ytdl.extract_info(url))
+            result = await self.client.loop.run_in_executor(None, lambda e: ytdl.extract_info(url))
             if 'entries' in result:
                 sendmess = "**Choose which one:**\n"
                 choices = []
@@ -254,6 +260,15 @@ class Soundboard(commands.Cog):
         the music source has it anyway).
         :param ctx: Filled automatically during command invoke. Context of the command.
         """
+        print("Queue!")
+        voice = get(self.client.voice_clients, guild=ctx.guild)
+
+        if voice.source.is_loop:
+            print("yes!")
+            self.client.loop.create_task(self.silentplay(ctx, voice.source.id, True))
+            return
+
+        print("no loop!!")
         with DBManager.dbmanager.Session.begin() as session:
             # delete current playing song
             toDel = session.query(QueueModel)\
@@ -267,9 +282,9 @@ class Soundboard(commands.Cog):
 
         # if it exists, play it along :)
         if result:
-            self.client.loop.create_task(self.silentplay(ctx, result[0]))
+            self.client.loop.create_task(self.silentplay(ctx, result[0], False))
 
-    async def silentplay(self, ctx: commands.context, url: str):
+    async def silentplay(self, ctx: commands.context, url: str, is_loop):
         """
         This method plays song without announcement on the text channel.
         :param ctx: Filled automatically during command invoke. Context of the command.
@@ -284,7 +299,7 @@ class Soundboard(commands.Cog):
         with youtube_dl.YoutubeDL(ytdl_opts) as ytdl:
             result = ytdl.extract_info(url)
 
-        voice.play(MusicSource(result['formats'][0]['url'], result,
+        voice.play(MusicSource(result['formats'][0]['url'], result, is_loop, 0,
                                           **Variables.FFMPEG_OPTIONS),
                    after=lambda e: self.check_queue(ctx))
 
@@ -329,7 +344,7 @@ class Soundboard(commands.Cog):
 
                 # if it's not occupied, play along :)
                 if not ctx.voice_client.is_playing() and not ctx.voice_client.is_paused():
-                    ctx.voice_client.play(MusicSource(objs[0].Entry, result['entries'][0],
+                    ctx.voice_client.play(MusicSource(objs[0].Entry, result['entries'][0], False, 0,
                                                       **Variables.FFMPEG_OPTIONS),
                                after=lambda e: self.check_queue(ctx))
 
@@ -345,11 +360,8 @@ class Soundboard(commands.Cog):
                 # if it's not occupied, play along :)
                 if not ctx.voice_client.is_playing() and not ctx.voice_client.is_paused():
                     try:
-                        ctx.voice_client.play(MusicSource(result['formats'][0]['url'], result,**Variables.FFMPEG_OPTIONS),
+                        ctx.voice_client.play(MusicSource(result['formats'][0]['url'], result, False, 0,**Variables.FFMPEG_OPTIONS),
                                 after=lambda e: self.check_queue(ctx))
-                        #ctx.voice_client.play(MusicSource(re.sub('https:\/\/(.*)\.googlevideo.com\/', 'https://redirector.googlevideo.com/', result['formats'][0]['url'], 1), result,**Variables.FFMPEG_OPTIONS),
-                        #        after=lambda e: self.check_queue(ctx))
-                        #ctx.voice_client.play('http://www.blankwebsite.com/', after=lambda e: self.check_queue(ctx))
                     except:
                         await ctx.send("There is a problem with audio player...")
 
@@ -380,6 +392,16 @@ class Soundboard(commands.Cog):
 
             if ctx.voice_client and (ctx.voice_client.is_playing() or ctx.voice_client.is_paused()):
                 ctx.voice_client.stop()
+
+    @commands.command()
+    @commands.has_any_role(f"{Variables.djRole}")
+    async def loop(self, ctx: commands.context):
+        voice = get(self.client.voice_clients, guild=ctx.guild)
+        if voice and voice.source:
+            voice.source.is_loop = voice.source.is_loop ^ True
+            await ctx.send(f"Changed to {voice.source.is_loop}")
+        else:
+            await ctx.send(f'Bot have to play sound to turn on a loop!')
 
     @commands.command(aliases=["np"])
     @commands.has_any_role(f"{Variables.djRole}")
