@@ -3,4 +3,5 @@ youtube_dl==2021.12.17
 mutagen==1.45.1
 sqlalchemy==1.4.29
 psycopg2==2.9.3
+python=3.10.9
 
