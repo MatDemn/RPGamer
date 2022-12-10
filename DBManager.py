@@ -19,6 +19,7 @@ class DBManager:
         #    self.engine = create_engine('postgresql://viuaugsugdvrpv:073c54d58241d4959b7764fea64fb39a28a1a99e1b109bb5c043d3eca14f5e00@ec2-34-246-24-110.eu-west-1.compute.amazonaws.com:5432/d7joef1t7h2s8v', future=True, echo=True)
         self.engine = create_engine('sqlite://', future=True, echo=True)
         self.Session = sessionmaker(bind=self.engine, future=True)
+        ## example code change
 
 dbmanager = DBManager()
 '''
