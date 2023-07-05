@@ -1,4 +1,4 @@
-RPGamer - RPG Sessions bot
+# **RPGamer - RPG Sessions bot**
 
 Did you ever got tired of scheduling RPG Sessions for your players?
 Or maybe you are one of the players who want to schedule 
@@ -8,9 +8,9 @@ Worry not, because here's a solution to your problem.
 Introducing Discord Bot which can help you organise,
 play and help you with your worries.
 
-Main features:
+## **Main features:**
 
-**Session planning**
+### **Session planning**
 
 You can ask bot to make a voting urn on your server!
 Other players will only click reactions representing
@@ -30,7 +30,7 @@ You can create summary for every registered session!
 
 ![Voting summary](images/sumPoll.png "Voting summary")
 
-**Youtube music**
+### **Youtube music**
 
 Good gameplay have to be supported by good soundtrack.
 And good soudtrack have to be played on something, or by something.
@@ -50,7 +50,7 @@ type into youtube!
 
 ![Youtube search](images/youtubeSearch.png "Youtube search")
 
-**Rolling dices**
+### **Rolling dices**
 
 I almost forgot about the most important part of RPG sessions.
 DICES! And I mean, all kinds of them. D6, D100, D10 etc.
